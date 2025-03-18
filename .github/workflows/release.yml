@@ -12,7 +12,7 @@ permissions:
   contents: write # required for creating releases
 
 jobs:
-  build-and-release:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -46,6 +46,28 @@ jobs:
         run: |
           codesign --force --deep --sign - dist/openpyxl_mcp_server
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ./dist/${{ matrix.artifact_name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: openpyxl_mcp_server.exe
+          path: ./dist
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: openpyxl_mcp_server
+          path: ./dist
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -57,12 +79,22 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Assets
+      - name: Upload Windows Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ matrix.artifact_name }}
-          asset_name: ${{ matrix.artifact_name }}
+          asset_path: ./dist/openpyxl_mcp_server.exe
+          asset_name: openpyxl_mcp_server.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/openpyxl_mcp_server
+          asset_name: openpyxl_mcp_server
           asset_content_type: application/octet-stream
