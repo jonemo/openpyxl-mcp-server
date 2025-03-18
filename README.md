@@ -25,9 +25,18 @@ See the "Testing your server with Claude for Desktop" section of https://modelco
 
 ## Claude Desktop configuration
 
-On Mac, adjust the following JSON to match your folder path, then merge with any existing file contents it into
-`~/Library/Application Support/Claude/claude_desktop_config.json`. You may have to create this file. Note that the
-`config.json` file that lives in the same folder is a different file, putting this JSON it into there does not work.
+Note that this only works with the [Claude Desktop app](https://claude.ai/download), not with Claude running in the web browser.
+
+If you have not used MCP with Claude Desktop before, you must create the `claude_desktop_config.json` configuration file.
+You can do this by opening the "Settings" menu and then go to the "Developer" menu item, then follow the instructions.
+
+Alternatively, you can create the file yourself. The common locations of it are:
+
+- macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+- Windows: %APPDATA%\Claude\claude_desktop_config.json
+
+Add the following to your `claude_desktop_config.json`.
+If you already use other MCP servers, you'll have to merge the JSON into the existing contents.
 
 ```json
 {
@@ -39,6 +48,13 @@ On Mac, adjust the following JSON to match your folder path, then merge with any
   }
 }
 ```
+
+After updating your configuration file, you need to restart the Claude app for the changes to take effect.
+
+Note that there is a separate `config.json` file that lives in the same folder. Don't touch that one.
+
+If you encounter problems, please consult [Anthropic's documentation](https://modelcontextprotocol.info/docs/quickstart/user/).
+Someone also made a config file generator at https://claudedesktopconfiggenerator.com/
 
 ## Configuring Cursor to use this
 
