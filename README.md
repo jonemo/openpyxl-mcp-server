@@ -231,3 +231,10 @@ Note: When building on macOS, you might need to sign the executable for it to ru
 ```sh
 codesign --force --deep --sign - dist/openpyxl_mcp_server
 ```
+
+### MCP Server Directories
+
+openpyxl-mcp-server is currently listed in these MCP server directories:
+
+- https://mcp.so/server/openpyxl-mcp-server/jonemo
+- https://mcpserver.cloud/server/openpyxl-mcp-server
