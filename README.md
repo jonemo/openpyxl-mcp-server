@@ -205,3 +205,29 @@ I used this file and prompt repeatedly as test case and got mixed results:
 - Correct answers, for example [this chat](https://claude.ai/share/bae7c6d8-6541-4216-953a-5b7abecde34c): The IRS Service Center in Ogden is the largest federally-owned building in Utah on the list.
 
 Footnote: The IRS Service Center is correct insofar that it is the largest building on the list. The "Bumblehive" aka "[Utah Data Center](https://en.wikipedia.org/wiki/Utah_Data_Center)" aka "Intelligence Community Comprehensive National Cybersecurity Initiative Data Center" is almost certainly larger but is not included in the file.
+
+## Contributing and Development
+
+### Building standalone executables
+
+To create standalone executables that don't require Python installation:
+
+1. Make sure you have all dependencies installed:
+
+   ```sh
+   pip install -r requirements.txt
+   pip install -r requirements-dev.txt
+   ```
+
+2. Build the executable:
+   ```sh
+   pyinstaller openpyxl_mcp_server.spec
+   ```
+
+The executable will be created in the `dist` directory. On Windows, it will be named `openpyxl_mcp_server.exe`. On macOS, it will be named `openpyxl_mcp_server`.
+
+Note: When building on macOS, you might need to sign the executable for it to run properly. You can do this with:
+
+```sh
+codesign --force --deep --sign - dist/openpyxl_mcp_server
+```
