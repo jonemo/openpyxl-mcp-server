@@ -9,34 +9,81 @@ Related links:
 - https://openpyxl.readthedocs.io/en/stable/index.html
 - https://modelcontextprotocol.io/quickstart/server
 
-## Setting it up
+## Installation
 
-Clone repo into some folder, in my examples below I am using `/Users/jonas/repos/openpyxl_mcp_server`. Then:
+### General Steps
+
+1. Download the latest version of the executable from https://github.com/jonemo/openpyxl-mcp-server/releases. `openpyxl_mcp_server` is for MacOS, `openpyxl_mcp_server.exe` is for Windows.
+2. Configure your MCP Client. Most commonly this will be Claude Desktop, see instructions in next section.
+
+Alternatively, if you don't trust my executables, you can also install the source version of the code directly from this repo. See the "From Source" section below.
+
+### Claude Desktop
+
+_Note that this only works with the [Claude Desktop app](https://claude.ai/download), not with Claude running in the web browser._
+
+1. Have Claude Desktop installed.
+2. Have the MCP server executable downloaded (see previous section).
+   This assumes that you have downloaded the executable to your Downloads folder.
+   You can use any other folder, adjust the paths in the configuration below accordingly.
+3. In Claude Desktop, open the "Settings..." menu:
+   ![](https://mintlify.s3.us-west-1.amazonaws.com/mcp/images/quickstart-menu.png)
+4. Navigate to the "Developer" section of the settings.
+5. Click "Edit Config". This will create a config file for MCP servers if you didn't have one already.
+   The default location of this file is:
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+6. On MacOS, add the following to your `claude_desktop_config.json`.
+   Replace `<YOUR-USERNAME>` with your MacOS username.
+   If you already use other MCP servers, you'll have to merge the JSON into the existing contents.
+   ```json
+   {
+     "mcpServers": {
+       "inspect_excel_xlsx_file": {
+         "command": "/Users/<YOUR-USERNAME>/Downloads/openpyxl_mcp_server",
+         "args": []
+       }
+     }
+   }
+   ```
+7. On Windows, add the following to your `claude_desktop_config.json`.
+   Replace `<YOUR-USERNAME>` with your MacOS username.
+   If you already use other MCP servers, you'll have to merge the JSON into the existing contents.
+   ```json
+   {
+     "mcpServers": {
+       "inspect_excel_xlsx_file": {
+         "command": "C:\\Users\\<YOUR-USERNAME>\\Downloads\\openpyxl_mcp_server",
+         "args": []
+       }
+     }
+   }
+   ```
+8. After updating your configuration file, you need to restart the Claude app for the changes to take effect.
+
+If you encounter problems, please consult these resources:
+
+- [Anthropic's documentation for users](https://modelcontextprotocol.info/docs/quickstart/user/).
+- The "Testing your server with Claude for Desktop" section of [Anthropic's documentation for developers](https://modelcontextprotocol.io/quickstart/server)
+- Someone also made a config file generator at https://claudedesktopconfiggenerator.com/
+
+## Configuring Cursor to use this
+
+Instructions for configuring MCP servers in Cursor are at https://docs.cursor.com/context/model-context-protocol.
+
+### From Source (for development)
+
+This section only applies if you wish to modify the source code or if you do not trust the provided executables and prefer to run from source code.
 
 ```sh
+git clone git@github.com:jonemo/openpyxl-mcp-server.git
+cd openpyxl-mcp-server
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Configuring Claude Desktop
-
-See the "Testing your server with Claude for Desktop" section of https://modelcontextprotocol.io/quickstart/server for instructions how to configure Claude Desktop. The exact command to use for this server is below.
-
-## Claude Desktop configuration
-
-Note that this only works with the [Claude Desktop app](https://claude.ai/download), not with Claude running in the web browser.
-
-If you have not used MCP with Claude Desktop before, you must create the `claude_desktop_config.json` configuration file.
-You can do this by opening the "Settings" menu and then go to the "Developer" menu item, then follow the instructions.
-
-Alternatively, you can create the file yourself. The common locations of it are:
-
-- macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
-- Windows: %APPDATA%\Claude\claude_desktop_config.json
-
-Add the following to your `claude_desktop_config.json`.
-If you already use other MCP servers, you'll have to merge the JSON into the existing contents.
+Assuming you've cloned your repo to `/Users/jonas/repos/openpyxl_mcp_server`, the configuration file contents should now change to:
 
 ```json
 {
@@ -48,17 +95,6 @@ If you already use other MCP servers, you'll have to merge the JSON into the exi
   }
 }
 ```
-
-After updating your configuration file, you need to restart the Claude app for the changes to take effect.
-
-Note that there is a separate `config.json` file that lives in the same folder. Don't touch that one.
-
-If you encounter problems, please consult [Anthropic's documentation](https://modelcontextprotocol.info/docs/quickstart/user/).
-Someone also made a config file generator at https://claudedesktopconfiggenerator.com/
-
-## Configuring Cursor to use this
-
-Instructions for setting it up in Cursor are at https://docs.cursor.com/context/model-context-protocol.
 
 ## Example prompts
 
@@ -238,3 +274,7 @@ openpyxl-mcp-server is currently listed in these MCP server directories:
 
 - https://mcp.so/server/openpyxl-mcp-server/jonemo
 - https://mcpserver.cloud/server/openpyxl-mcp-server
+
+TODO:
+
+https://www.mcpserverfinder.com/
