@@ -53,7 +53,7 @@ _Note that this only works with the [Claude Desktop app](https://claude.ai/downl
    {
      "mcpServers": {
        "inspect_excel_xlsx_file": {
-         "command": "C:\\Users\\<YOUR-USERNAME>\\Downloads\\openpyxl_mcp_server",
+         "command": "C:\\Users\\<YOUR-USERNAME>\\Downloads\\openpyxl_mcp_server.exe",
          "args": []
        }
      }
