@@ -21,13 +21,15 @@ OPENPYXL_TYPE_TO_STRING = {
     "e": "error",
 }
 
+FILEPATH_DOCSTRING = 'The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.'
+
 
 @mcp.tool()
 async def get_cell_details(filepath: str, sheet_name: str, cell_name: str) -> str:
-    """Get value, data type, style, comments, formulas, hyperlinks, and other details for a single cell in a workbook.
+    f"""Get value, data type, style, comments, formulas, hyperlinks, and other details for a single cell in a workbook.
 
     Args:
-        file_path: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx".
+        file_path: {FILEPATH_DOCSTRING}
         sheet_name: The name of the sheet to get the value from.
         cell name: The name of the cell to get the value from. For example, "A1", "B2", "R5987".
     """
@@ -199,10 +201,10 @@ async def get_cell_details(filepath: str, sheet_name: str, cell_name: str) -> st
 
 @mcp.tool()
 async def get_cell_value(filepath: str, sheet_name: str, cell_name: str) -> str:
-    """Get the raw value of a single cell in a workbook.
+    f"""Get the raw value of a single cell in a workbook.
 
     Args:
-        file_path: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx".
+        file_path: {FILEPATH_DOCSTRING}
         sheet_name: The name of the sheet to get the value from.
         cell name: The name of the cell to get the value from. For example, "A1", "B2", "R5987".
     """
@@ -217,10 +219,10 @@ async def get_cell_value(filepath: str, sheet_name: str, cell_name: str) -> str:
 async def get_values_of_cell_range(
     filepath: str, sheet_name: str, top_left_cell: str, bottom_right_cell: str
 ) -> str:
-    """Get the value, data type, style, and any comments, of a continuous range of cells in an Excel workbook.
+    f"""Get the value, data type, style, and any comments, of a continuous range of cells in an Excel workbook.
 
     Args:
-        file_path: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx".
+        file_path: {FILEPATH_DOCSTRING}
         sheet_name: The name of the sheet to get the value from.
         top_left_cell: The top left cell of the range. For example, "A1".
         bottom_right_cell: The bottom right cell of the range. For example, "RC976".
@@ -242,10 +244,10 @@ async def get_values_of_cell_range(
 async def get_content_of_cell_list(
     filepath: str, sheet_name: str, cell_name_list: list[str]
 ) -> str:
-    """Get the raw values of a list of specific named cells in an Excel workbook.
+    f"""Get the raw values of a list of specific named cells in an Excel workbook.
 
     Args:
-        file_path: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx".
+        file_path: {FILEPATH_DOCSTRING}
         sheet_name: The name of the sheet to get the value from.
         cell_name_list: A list of cell names. For example, ["A1", "B2", "C3"].
     """
@@ -268,10 +270,10 @@ async def search_in_cell_range(
     search_string: str,
     exact_match: bool = False,
 ) -> str:
-    """Search for a string in a continuous range of cells in an Excel workbook.
+    f"""Search for a string in a continuous range of cells in an Excel workbook.
 
     Args:
-        file_path: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx".
+        file_path: {FILEPATH_DOCSTRING}
         sheet_name: The name of the sheet to get the value from.
         top_left_cell: The top left cell of the range. For example, "A1".
         bottom_right_cell: The bottom right cell of the range. For example, "RC976".
@@ -298,10 +300,10 @@ async def search_in_cell_range(
 
 @mcp.tool()
 async def get_list_of_sheets(filepath: str) -> str:
-    """Get a list of sheets in an Excel workbook. Each line contains a sheet's name and dimensions.
+    f"""Get a list of sheets in an Excel workbook. Each line contains a sheet's name and dimensions.
 
     Args:
-        file_path: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx".
+        file_path: {FILEPATH_DOCSTRING}
     """
     filepath_clean = resolve_path_and_assert_file_exists(filepath)
     wb = load_workbook(filename=filepath_clean)
@@ -313,9 +315,20 @@ async def get_list_of_sheets(filepath: str) -> str:
 
 def resolve_path_and_assert_file_exists(filepath: str) -> Path:
     expanded_path = Path(filepath).expanduser()
-    if not expanded_path.exists():
-        raise ValueError(f"File {expanded_path} does not exist 2")
-    return expanded_path
+    if expanded_path.exists():
+        return expanded_path
+    # If filepath is just a filename and this is Winodws or MacOS, try the default locations of the Desktop and
+    # Downloads directories
+    is_windows = sys.platform == "win32" and "\\" not in filepath
+    is_macos = sys.platform == "darwin" and "/" not in filepath
+    if is_windows or is_macos:
+        path_in_desktop = Path.home() / "Desktop" / filepath
+        if path_in_desktop.exists():
+            return path_in_desktop
+        path_in_downloads = Path.home() / "Downloads" / filepath
+        if path_in_downloads.exists():
+            return path_in_downloads
+    raise ValueError(f"File '{filepath}' does not exist")
 
 
 def get_sheet_and_assert_it_exists(wb: Workbook, sheet_name: str) -> Worksheet:
