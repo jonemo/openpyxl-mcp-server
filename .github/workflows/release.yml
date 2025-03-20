@@ -68,33 +68,12 @@ jobs:
           name: openpyxl_mcp_server
           path: ./dist
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create Release and Upload Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ inputs.version }}
-          release_name: v${{ inputs.version }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Windows Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/openpyxl_mcp_server.exe
-          asset_name: openpyxl_mcp_server.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload macOS Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/openpyxl_mcp_server
-          asset_name: openpyxl_mcp_server
-          asset_content_type: application/octet-stream
+        run: |
+          gh release create v${{ inputs.version }} \
+            --title "v${{ inputs.version }}" \
+            --notes "Release v${{ inputs.version }}" \
+            ./dist/openpyxl_mcp_server.exe \
+            ./dist/openpyxl_mcp_server

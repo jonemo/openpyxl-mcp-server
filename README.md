@@ -59,7 +59,7 @@ _Note that this only works with the [Claude Desktop app](https://claude.ai/downl
      }
    }
    ```
-8. After updating your configuration file, you need to restart the Claude app for the changes to take effect.
+8. After updating your configuration file, you need to restart the Claude app for the changes to take effect. **It is not enough to close the Claude app window. On Windows you must right click the Claude icon in your system tray and select "Quit". On macOS you can use Command+Q.**
 
 If you encounter problems, please consult these resources:
 
@@ -67,9 +67,16 @@ If you encounter problems, please consult these resources:
 - The "Testing your server with Claude for Desktop" section of [Anthropic's documentation for developers](https://modelcontextprotocol.io/quickstart/server)
 - Someone also made a config file generator at https://claudedesktopconfiggenerator.com/
 
-## Configuring Cursor to use this
+## Configuring other MCP clients
 
-Instructions for configuring MCP servers in Cursor are at https://docs.cursor.com/context/model-context-protocol.
+Instructions for configuring MCP servers in other tools that support them:
+
+- [Cursor](https://docs.cursor.com/context/model-context-protocol)
+- [Windsurf](https://docs.codeium.com/windsurf/mcp)
+- [Zed](https://zed.dev/docs/assistant/model-context-protocol)
+- [RooCode](https://docs.roocode.com/advanced-usage/mcp/)
+- [Cline](https://github.com/cline/cline?tab=readme-ov-file#add-a-tool-that)
+- [LibreChat](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/mcp_servers)
 
 ### From Source (for development)
 
