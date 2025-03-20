@@ -313,9 +313,20 @@ async def get_list_of_sheets(filepath: str) -> str:
 
 def resolve_path_and_assert_file_exists(filepath: str) -> Path:
     expanded_path = Path(filepath).expanduser()
-    if not expanded_path.exists():
-        raise ValueError(f"File {expanded_path} does not exist 2")
-    return expanded_path
+    if expanded_path.exists():
+        return expanded_path
+    # If filepath is just a filename and this is Winodws or MacOS, try the default locations of the Desktop and
+    # Downloads directories
+    is_windows = sys.platform == "win32" and "\\" not in filepath
+    is_macos = sys.platform == "darwin" and "/" not in filepath
+    if is_windows or is_macos:
+        path_in_desktop = Path.home() / "Desktop" / filepath
+        if path_in_desktop.exists():
+            return path_in_desktop
+        path_in_downloads = Path.home() / "Downloads" / filepath
+        if path_in_downloads.exists():
+            return path_in_downloads
+    raise ValueError(f"File '{filepath}' does not exist")
 
 
 def get_sheet_and_assert_it_exists(wb: Workbook, sheet_name: str) -> Worksheet:
