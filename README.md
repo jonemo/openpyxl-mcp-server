@@ -14,7 +14,8 @@ Related links:
 ### General Steps
 
 1. Download the latest version of the executable from https://github.com/jonemo/openpyxl-mcp-server/releases. `openpyxl_mcp_server` is for MacOS, `openpyxl_mcp_server.exe` is for Windows.
-2. Configure your MCP Client. Most commonly this will be Claude Desktop, see instructions in next section.
+2. For MacOS users, make sure to set executable permissions on the downloaded file: `chmod a+x /path/to/openpyxl_mcp_server` (replace `/path/to/` with your actual download location).
+3. Configure your MCP Client. Most commonly this will be Claude Desktop, see instructions in next section.
 
 Windows will try to talk you out of running a random executable downloaded from the internet.
 You will have to click "Keep" or "Keep anyway" in various places to convince it to not delete the file.
