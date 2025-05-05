@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/jonemo-openpyxl-mcp-server-badge.png)](https://mseep.ai/app/jonemo-openpyxl-mcp-server)
+
 # openpyxl_mcp_server
 
 ## What is this?
