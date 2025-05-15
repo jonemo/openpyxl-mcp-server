@@ -1,4 +1,5 @@
 # openpyxl_mcp_server
+[![smithery badge](https://smithery.ai/badge/openpyxl-mcp-server)](https://smithery.ai/server/openpyxl-mcp-server)
 
 ## What is this?
 
@@ -10,6 +11,14 @@ Related links:
 - https://modelcontextprotocol.io/quickstart/server
 
 ## Installation
+
+### Installing via Smithery
+
+To install openpyxl_mcp_server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/openpyxl-mcp-server):
+
+```bash
+npx -y @smithery/cli install openpyxl-mcp-server --client claude
+```
 
 ### General Steps
 
