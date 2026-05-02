@@ -219,7 +219,7 @@ async def get_cell_value(filepath: str, sheet_name: str, cell_name: str) -> str:
 async def get_values_of_cell_range(
     filepath: str, sheet_name: str, top_left_cell: str, bottom_right_cell: str
 ) -> str:
-    f"""Get the value, data type, style, and any comments, of a continuous range of cells in an Excel workbook.
+    f"""Get the value of a continuous range of cells in an Excel workbook.
 
     Args:
         file_path: {FILEPATH_DOCSTRING}
