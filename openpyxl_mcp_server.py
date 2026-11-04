@@ -210,7 +210,7 @@ async def get_cell_value(filepath: str, sheet_name: str, cell_name: str) -> str:
     wb = load_workbook(filename=filepath_clean)
     sheet = get_sheet_and_assert_it_exists(wb, sheet_name)
     cell = sheet[cell_name]
-    return str({cell.value})
+    return str(cell.value)
 
 
 @mcp.tool()
