@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 from openpyxl import load_workbook
 from openpyxl.workbook.workbook import Workbook
@@ -11,7 +11,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.utils.datetime import from_excel
 
 
-mcp = FastMCP("openpyxl_mcp_server")
+mcp = MCPServer("openpyxl_mcp_server")
 
 OPENPYXL_TYPE_TO_STRING = {
     "n": "numeric",
