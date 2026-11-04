@@ -44,7 +44,7 @@ jobs:
               sys.exit(f"pyproject.toml has version {version}, but release input is {os.environ['RELEASE_VERSION']}")
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.3
 
       - name: Install dependencies
         run: uv sync --locked
