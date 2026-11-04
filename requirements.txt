@@ -1,2 +1,0 @@
-mcp[cli]==2.3.0
-openpyxl==3.1.5

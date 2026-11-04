@@ -21,7 +21,30 @@ Windows will try to talk you out of running a random executable downloaded from 
 You will have to click "Keep" or "Keep anyway" in various places to convince it to not delete the file.
 The details of this depend on which browser you use and what your Windows Defender settings are.
 
-Alternatively, if you don't trust my executables, you can also install the source version of the code directly from this repo. See the "From Source" section below.
+Alternatively, if you don't trust my executables, you can also install the source version of the code directly from this repo. See the "Run with uvx" and "From Source" sections below.
+
+### Run with uvx
+
+If you have [uv](https://docs.astral.sh/uv/) installed, you can skip the executable and let `uvx` install and run the server directly from this repo.
+In the Claude Desktop configuration below, use this instead of the path to the executable:
+
+```json
+{
+  "mcpServers": {
+    "inspect_excel_xlsx_file": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/jonemo/openpyxl-mcp-server",
+        "openpyxl-mcp-server"
+      ]
+    }
+  }
+}
+```
+
+This runs the latest commit on `main`.
+To stay on a specific release, append its tag to the URL, for example `git+https://github.com/jonemo/openpyxl-mcp-server@v0.2.0`.
 
 ### Configuring Claude Desktop
 
@@ -87,12 +110,13 @@ Instructions for configuring MCP servers in other tools that support them:
 
 This section only applies if you wish to modify the source code or if you do not trust the provided executables and prefer to run from source code.
 
+Dependencies are managed with [uv](https://docs.astral.sh/uv/).
+Exact versions of all dependencies are pinned in `uv.lock`.
+
 ```sh
 git clone git@github.com:jonemo/openpyxl-mcp-server.git
 cd openpyxl-mcp-server
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+uv sync
 ```
 
 Assuming you've cloned your repo to `/Users/jonas/repos/openpyxl_mcp_server`, the configuration file contents should now change to:
@@ -101,12 +125,22 @@ Assuming you've cloned your repo to `/Users/jonas/repos/openpyxl_mcp_server`, th
 {
   "mcpServers": {
     "inspect_excel_xlsx_file": {
-      "command": "/Users/jonas/repos/openpyxl_mcp_server/venv/bin/python",
-      "args": ["/Users/jonas/repos/openpyxl_mcp_server/openpyxl_mcp_server.py"]
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/Users/jonas/repos/openpyxl_mcp_server",
+        "openpyxl-mcp-server"
+      ]
     }
   }
 }
 ```
+
+If you'd rather not depend on uv at runtime, point `command` at the virtual environment's Python (`.venv/bin/python` on macOS, `.venv\Scripts\python.exe` on Windows) and pass the path to `openpyxl_mcp_server.py` in `args`.
+
+Run the tests with `uv run pytest`.
+To update dependencies, run `uv lock --upgrade-package <name>` (or `uv lock --upgrade` for all of them) and commit the updated `uv.lock`.
 
 ## Example prompts
 
@@ -260,16 +294,15 @@ Footnote: The IRS Service Center is correct insofar that it is the largest build
 
 To create standalone executables that don't require Python installation:
 
-1. Make sure you have all dependencies installed:
+1. Make sure you have all dependencies installed (this includes the `dev` dependency group with PyInstaller):
 
    ```sh
-   pip install -r requirements.txt
-   pip install -r requirements-dev.txt
+   uv sync
    ```
 
 2. Build the executable:
    ```sh
-   pyinstaller openpyxl_mcp_server.spec
+   uv run pyinstaller openpyxl_mcp_server.spec
    ```
 
 The executable will be created in the `dist` directory. On Windows, it will be named `openpyxl_mcp_server.exe`. On macOS, it will be named `openpyxl_mcp_server`.
@@ -279,6 +312,11 @@ Note: When building on macOS, you might need to sign the executable for it to ru
 ```sh
 codesign --force --deep --sign - dist/openpyxl_mcp_server
 ```
+
+### Releasing
+
+1. Bump `version` in `pyproject.toml` and merge that change to `main`.
+2. Run the "Release New Version" workflow with the same version number. It fails if the two don't match.
 
 ### MCP Server Directories
 
