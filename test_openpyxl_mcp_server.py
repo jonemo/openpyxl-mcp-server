@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 from pathlib import Path
 from openpyxl_mcp_server import get_list_of_sheets
+from openpyxl_mcp_server import mcp
 from openpyxl_mcp_server import resolve_path_and_assert_file_exists
 
 
@@ -49,3 +50,13 @@ def test_resolve_path_and_assert_file_exists_in_default_folder(home_folder_name)
         with patch("openpyxl_mcp_server.Path.home", return_value=temp_dir_path):
             result = resolve_path_and_assert_file_exists(test_file_name)
             assert result == test_file_path
+
+
+@pytest.mark.asyncio
+async def test_all_tools_have_descriptions():
+    tools = await mcp.list_tools()
+    assert len(tools) == 6
+    for tool in tools:
+        assert tool.description, f"Tool {tool.name} has no description"
+        assert "{FILEPATH_DOCSTRING}" not in tool.description
+        assert "The path to the Excel workbook." in tool.description
