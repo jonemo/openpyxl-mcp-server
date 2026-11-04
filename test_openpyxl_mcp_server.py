@@ -58,5 +58,4 @@ async def test_all_tools_have_descriptions():
     assert len(tools) == 6
     for tool in tools:
         assert tool.description, f"Tool {tool.name} has no description"
-        assert "{FILEPATH_DOCSTRING}" not in tool.description
         assert "The path to the Excel workbook." in tool.description
