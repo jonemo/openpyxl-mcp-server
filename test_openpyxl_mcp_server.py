@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pytest
 from pathlib import Path
+from openpyxl_mcp_server import get_cell_value
 from openpyxl_mcp_server import get_list_of_sheets
 from openpyxl_mcp_server import mcp
 from openpyxl_mcp_server import resolve_path_and_assert_file_exists
@@ -18,6 +19,13 @@ async def test_get_list_of_sheets():
     assert sheets[0] == "Name: First Worksheet, Dimensions: A1:F4"
     # Yes, you can have use emojis in sheet names:
     assert sheets[1] == "Name: 🧮, Dimensions: A1:B1"
+
+
+@pytest.mark.asyncio
+async def test_get_cell_value():
+    test_file = Path(__file__).parent / "testdata" / "simple_workbook.xlsx"
+    assert await get_cell_value(str(test_file), "First Worksheet", "B2") == "1"
+    assert await get_cell_value(str(test_file), "First Worksheet", "C2") == "hello"
 
 
 def test_resolve_path_and_assert_file_exists_full_path():
