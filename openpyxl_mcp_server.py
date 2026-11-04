@@ -21,17 +21,15 @@ OPENPYXL_TYPE_TO_STRING = {
     "e": "error",
 }
 
-FILEPATH_DOCSTRING = 'The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.'
-
 
 @mcp.tool()
 async def get_cell_details(filepath: str, sheet_name: str, cell_name: str) -> str:
-    f"""Get value, data type, style, comments, formulas, hyperlinks, and other details for a single cell in a workbook.
+    """Get value, data type, style, comments, formulas, hyperlinks, and other details for a single cell in a workbook.
 
     Args:
-        file_path: {FILEPATH_DOCSTRING}
+        filepath: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.
         sheet_name: The name of the sheet to get the value from.
-        cell name: The name of the cell to get the value from. For example, "A1", "B2", "R5987".
+        cell_name: The name of the cell to get the value from. For example, "A1", "B2", "R5987".
     """
     filepath_clean = resolve_path_and_assert_file_exists(filepath)
     wb = load_workbook(filename=filepath_clean)
@@ -201,12 +199,12 @@ async def get_cell_details(filepath: str, sheet_name: str, cell_name: str) -> st
 
 @mcp.tool()
 async def get_cell_value(filepath: str, sheet_name: str, cell_name: str) -> str:
-    f"""Get the raw value of a single cell in a workbook.
+    """Get the raw value of a single cell in a workbook.
 
     Args:
-        file_path: {FILEPATH_DOCSTRING}
+        filepath: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.
         sheet_name: The name of the sheet to get the value from.
-        cell name: The name of the cell to get the value from. For example, "A1", "B2", "R5987".
+        cell_name: The name of the cell to get the value from. For example, "A1", "B2", "R5987".
     """
     filepath_clean = resolve_path_and_assert_file_exists(filepath)
     wb = load_workbook(filename=filepath_clean)
@@ -219,10 +217,10 @@ async def get_cell_value(filepath: str, sheet_name: str, cell_name: str) -> str:
 async def get_values_of_cell_range(
     filepath: str, sheet_name: str, top_left_cell: str, bottom_right_cell: str
 ) -> str:
-    f"""Get the value of a continuous range of cells in an Excel workbook.
+    """Get the value of a continuous range of cells in an Excel workbook.
 
     Args:
-        file_path: {FILEPATH_DOCSTRING}
+        filepath: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.
         sheet_name: The name of the sheet to get the value from.
         top_left_cell: The top left cell of the range. For example, "A1".
         bottom_right_cell: The bottom right cell of the range. For example, "RC976".
@@ -244,10 +242,10 @@ async def get_values_of_cell_range(
 async def get_content_of_cell_list(
     filepath: str, sheet_name: str, cell_name_list: list[str]
 ) -> str:
-    f"""Get the raw values of a list of specific named cells in an Excel workbook.
+    """Get the raw values of a list of specific named cells in an Excel workbook.
 
     Args:
-        file_path: {FILEPATH_DOCSTRING}
+        filepath: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.
         sheet_name: The name of the sheet to get the value from.
         cell_name_list: A list of cell names. For example, ["A1", "B2", "C3"].
     """
@@ -270,10 +268,10 @@ async def search_in_cell_range(
     search_string: str,
     exact_match: bool = False,
 ) -> str:
-    f"""Search for a string in a continuous range of cells in an Excel workbook.
+    """Search for a string in a continuous range of cells in an Excel workbook.
 
     Args:
-        file_path: {FILEPATH_DOCSTRING}
+        filepath: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.
         sheet_name: The name of the sheet to get the value from.
         top_left_cell: The top left cell of the range. For example, "A1".
         bottom_right_cell: The bottom right cell of the range. For example, "RC976".
@@ -300,10 +298,10 @@ async def search_in_cell_range(
 
 @mcp.tool()
 async def get_list_of_sheets(filepath: str) -> str:
-    f"""Get a list of sheets in an Excel workbook. Each line contains a sheet's name and dimensions.
+    """Get a list of sheets in an Excel workbook. Each line contains a sheet's name and dimensions.
 
     Args:
-        file_path: {FILEPATH_DOCSTRING}
+        filepath: The path to the Excel workbook. For example, "~/Downloads/test.xlsx" or "C:\\myfolder\\myfile.xlsx". If only a filename is provided, the file will be searched for in the Desktop and Downloads folders.
     """
     filepath_clean = resolve_path_and_assert_file_exists(filepath)
     wb = load_workbook(filename=filepath_clean)
