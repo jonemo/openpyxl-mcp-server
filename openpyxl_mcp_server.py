@@ -344,7 +344,7 @@ def render_cell_value(val: Any) -> str:
         return str(val)
 
 
-if __name__ == "__main__":
+def main():
     try:
         mcp.run(transport="stdio")
     except KeyboardInterrupt:
@@ -352,3 +352,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(e, file=sys.stderr)
         raise
+
+
+if __name__ == "__main__":
+    main()
