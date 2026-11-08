@@ -44,7 +44,7 @@ In the Claude Desktop configuration below, use this instead of the path to the e
 ```
 
 This runs the latest commit on `main`.
-To stay on a specific release, append its tag to the URL, for example `git+https://github.com/jonemo/openpyxl-mcp-server@v0.2.0`.
+To stay on a specific release, append its tag to the URL, for example `git+https://github.com/jonemo/openpyxl-mcp-server@v0.2.1`.
 
 ### Configuring Claude Desktop
 
