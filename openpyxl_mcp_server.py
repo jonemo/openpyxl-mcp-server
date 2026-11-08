@@ -7,6 +7,7 @@ from mcp.server.mcpserver import MCPServer
 
 from openpyxl import load_workbook
 from openpyxl.workbook.workbook import Workbook
+from openpyxl.worksheet.cell_range import CellRange
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.utils.datetime import from_excel
 
@@ -228,10 +229,14 @@ async def get_values_of_cell_range(
     filepath_clean = resolve_path_and_assert_file_exists(filepath)
     wb = load_workbook(filename=filepath_clean)
     sheet = get_sheet_and_assert_it_exists(wb, sheet_name)
-    range_str = ":".join(sorted([top_left_cell, bottom_right_cell]))
-    cell_range = sheet[range_str]
+    cell_range = CellRange(top_left_cell).union(CellRange(bottom_right_cell))
     result = []
-    for row in cell_range:
+    for row in sheet.iter_rows(
+        min_row=cell_range.min_row,
+        max_row=cell_range.max_row,
+        min_col=cell_range.min_col,
+        max_col=cell_range.max_col,
+    ):
         for cell in row:
             result.append(f"{cell.coordinate}: {cell.value}")
 
@@ -281,10 +286,14 @@ async def search_in_cell_range(
     filepath_clean = resolve_path_and_assert_file_exists(filepath)
     wb = load_workbook(filename=filepath_clean)
     sheet = get_sheet_and_assert_it_exists(wb, sheet_name)
-    range_str = ":".join(sorted([top_left_cell, bottom_right_cell]))
-    cell_range = sheet[range_str]
+    cell_range = CellRange(top_left_cell).union(CellRange(bottom_right_cell))
     result = []
-    for row in cell_range:
+    for row in sheet.iter_rows(
+        min_row=cell_range.min_row,
+        max_row=cell_range.max_row,
+        min_col=cell_range.min_col,
+        max_col=cell_range.max_col,
+    ):
         for cell in row:
             if exact_match:
                 if search_string == str(cell.value):
