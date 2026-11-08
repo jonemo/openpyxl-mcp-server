@@ -3,10 +3,29 @@ from unittest.mock import patch
 
 import pytest
 from pathlib import Path
+from openpyxl import Workbook
 from openpyxl_mcp_server import get_cell_value
 from openpyxl_mcp_server import get_list_of_sheets
+from openpyxl_mcp_server import get_values_of_cell_range
 from openpyxl_mcp_server import mcp
 from openpyxl_mcp_server import resolve_path_and_assert_file_exists
+from openpyxl_mcp_server import search_in_cell_range
+
+
+@pytest.fixture
+def workbook_with_coordinates():
+    # Every cell in A1:AB12 contains its own coordinate as value, crossing both
+    # the one-to-two digit row boundary and the one-to-two letter column boundary
+    with tempfile.TemporaryDirectory() as temp_dir:
+        wb = Workbook()
+        sheet = wb.active
+        sheet.title = "Sheet1"
+        for row in sheet.iter_rows(min_row=1, max_row=12, min_col=1, max_col=28):
+            for cell in row:
+                cell.value = cell.coordinate
+        test_file = Path(temp_dir) / "coordinates.xlsx"
+        wb.save(test_file)
+        yield str(test_file)
 
 
 @pytest.mark.asyncio
@@ -67,3 +86,38 @@ async def test_all_tools_have_descriptions():
     for tool in tools:
         assert tool.description, f"Tool {tool.name} has no description"
         assert "The path to the Excel workbook." in tool.description
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "top_left_cell, bottom_right_cell, expected_cells",
+    [
+        ("A1", "A3", ["A1", "A2", "A3"]),
+        ("A9", "A11", ["A9", "A10", "A11"]),
+        ("A11", "A9", ["A9", "A10", "A11"]),
+        ("Z1", "AA1", ["Z1", "AA1"]),
+        ("B1", "A2", ["A1", "B1", "A2", "B2"]),
+        ("A1", "A1", ["A1"]),
+    ],
+)
+async def test_get_values_of_cell_range(
+    workbook_with_coordinates, top_left_cell, bottom_right_cell, expected_cells
+):
+    result = await get_values_of_cell_range(
+        workbook_with_coordinates, "Sheet1", top_left_cell, bottom_right_cell
+    )
+    assert result == "\n".join(f"{cell}: {cell}" for cell in expected_cells)
+
+
+@pytest.mark.asyncio
+async def test_get_values_of_cell_range_invalid_cell(workbook_with_coordinates):
+    with pytest.raises(ValueError):
+        await get_values_of_cell_range(workbook_with_coordinates, "Sheet1", "A0", "A3")
+
+
+@pytest.mark.asyncio
+async def test_search_in_cell_range(workbook_with_coordinates):
+    result = await search_in_cell_range(
+        workbook_with_coordinates, "Sheet1", "A9", "A11", "A10"
+    )
+    assert result == "A10: A10"
